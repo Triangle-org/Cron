@@ -27,20 +27,21 @@ namespace Triangle\Cron;
 
 use localzet\Cron;
 use localzet\Server;
-use Triangle\Engine\BootstrapInterface;
+use Triangle\Engine\AutoloadInterface;
 
-class Bootstrap implements BootstrapInterface
+class Autoload implements AutoloadInterface
 {
-    public static function start(?Server $server = null): void
+    public static function start(?string $arg = '', ?Server $server = null): void
     {
-        if (!$server || empty(config('cron'))) {
-            return;
-        }
-
-        foreach (config('cron') as $task) {
-            if (!empty($task['callback']) && !empty($task['rule'])) {
-                new Cron($task['rule'], $task['callback'], $task['name'] ?? '');
-            }
+        if (\Triangle\Engine\Autoload::isManageCommand($arg)) {
+            $server = localzet_start('Cron', 1);
+            $server->onServerStart = function () {
+                foreach (config('cron', []) as $task) {
+                    if (!empty($task['callback']) && !empty($task['rule'])) {
+                        new Cron($task['rule'], $task['callback'], $task['name'] ?? '');
+                    }
+                }
+            };
         }
     }
 }

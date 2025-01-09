@@ -26,7 +26,6 @@
 namespace Triangle\Cron;
 
 use localzet\Cron;
-use localzet\Events;
 use localzet\Server;
 use Triangle\Engine\BootstrapInterface;
 
@@ -38,10 +37,10 @@ class Bootstrap implements BootstrapInterface
             return;
         }
 
-        Events::on('Server::Start', function () {
-            foreach (config('cron') as $task) {
-                if (!empty($task['callback'])) new Cron($task['rule'] ?? '* * * * * *', $task['callback'], $task['name'] ?? '');
+        foreach (config('cron') as $task) {
+            if (!empty($task['callback']) && !empty($task['rule'])) {
+                new Cron($task['rule'], $task['callback'], $task['name'] ?? '');
             }
-        });
+        }
     }
 }

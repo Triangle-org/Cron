@@ -1,11 +1,11 @@
 {
   "name": "triangle/cron",
-  "description": "Triangle Events Component",
+  "description": "Triangle Cron Component",
   "type": "library",
   "keywords": [
     "localzet",
     "Triangle",
-    "Events"
+    "Cron"
   ],
   "license": "AGPL-3.0-or-later",
   "authors": [
@@ -18,7 +18,7 @@
   ],
   "support": {
     "email": "support@localzet.com",
-    "source": "https://github.com/Triangle-org/Events"
+    "source": "https://github.com/Triangle-org/Cron"
   },
   "autoload": {
     "psr-4": {

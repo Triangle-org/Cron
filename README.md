@@ -1,21 +1,57 @@
-<p align="center"><a href="https://www.localzet.com" target="_blank">
-  <img src="https://static.zorin.space/media/logos/LocalzetGroup.png" width="400">
-</a></p>
+# Triangle Cron
 
-<p align="center">
-  <a href="https://packagist.org/packages/triangle/cron">
-  <img src="https://img.shields.io/packagist/dt/triangle/cron?label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F" alt="Скачивания">
-</a>
-  <a href="https://github.com/Triangle-org/Cron">
-  <img src="https://img.shields.io/github/commit-activity/t/Triangle-org/Cron?label=%D0%9A%D0%BE%D0%BC%D0%BC%D0%B8%D1%82%D1%8B" alt="Коммиты">
-</a>
-  <a href="https://packagist.org/packages/triangle/cron">
-  <img src="https://img.shields.io/packagist/v/triangle/cron?label=%D0%92%D0%B5%D1%80%D1%81%D0%B8%D1%8F" alt="Версия">
-</a>
-  <a href="https://packagist.org/packages/triangle/cron">
-  <img src="https://img.shields.io/packagist/dependency-v/triangle/cron/php?label=PHP" alt="Версия PHP">
-</a>
-  <a href="https://github.com/Triangle-org/Cron">
-  <img src="https://img.shields.io/github/license/Triangle-org/Cron?label=%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F" alt="Лицензия">
-</a>
-</p>
+Triangle Cron registers the Localzet Cron scheduler as a one-worker process in a Triangle Engine application. It reads task definitions from `config('cron')` and attaches them to the scheduler process when that server starts.
+
+## Requirements
+
+- PHP `^8.1`
+- Triangle Engine `^9.0`
+- Localzet Server `^7.1` (provided by Engine 9)
+- Localzet Cron `^2.0`
+
+Version 2.x targets Engine 9 and Server 7. Applications on Engine 8 and Server 4 must stay on Triangle Cron 1.x.
+
+## Installation
+
+```sh
+composer require triangle/cron:^2.0
+```
+
+Add task definitions to `config/cron.php`:
+
+```php
+<?php
+
+return [
+    [
+        'name' => 'cleanup-expired-records',
+        'rule' => '*/5 * * * *',
+        'callback' => static function (): void {
+            // Run a short, non-blocking task here.
+        },
+    ],
+];
+```
+
+Five-field rules use minute precision. Six-field rules can include seconds. Callbacks run on the Localzet Server event loop: keep them short and non-blocking, and send long-running work to a queue or another process.
+
+## Runtime behavior
+
+When Engine bootstraps a managed server startup (`start` or `restart`), the component registers a dedicated `Cron` server with one worker. At that worker's `onServerStart` event, it reads `config('cron', [])` and registers entries that have both a non-empty `rule` and a `callback`.
+
+This is an in-process scheduler, not a durable job queue. Scheduled work is not persisted across restarts, and the component does not coordinate schedules across separate application installations. Keep the scheduler process to one worker unless the application deliberately wants each worker to execute every configured task.
+
+## Checks
+
+```sh
+composer install
+composer run check
+```
+
+The compatibility check verifies that the component implements Engine 9's autoload contract, creates its scheduler server through Server 7's startup helper, and loads only complete task definitions. CI runs the checks on PHP 8.1–8.5.
+
+## License
+
+AGPL-3.0-or-later.
+
+Copyright © 2016-2026 [Localzet Group](https://www.localzet.com/). All rights reserved.

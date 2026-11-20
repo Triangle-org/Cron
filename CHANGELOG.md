@@ -24,6 +24,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Prepare the Engine 9 and Localzet Server 7 compatibility release.
+- Require `triangle/engine:^9.0` and `localzet/cron:^2.0`.
+
+### Removed
+- Remove the unused `triangle/events` dependency.
+
+### Migration
+- This release line requires Engine 9 and Localzet Server 7; Engine 8 and Server 4 applications must remain on `triangle/cron` 1.x.
+
 ### Planned
 - Task queuing
 - Distributed task execution

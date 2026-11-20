@@ -1,11 +1,13 @@
 {
   "name": "triangle/cron",
-  "description": "Triangle Cron Component",
+  "description": "Cron scheduler integration for Triangle Engine 9 and Localzet Server 7.",
   "type": "library",
   "keywords": [
     "localzet",
     "Triangle",
-    "Cron"
+    "Cron",
+    "scheduler",
+    "server"
   ],
   "license": "AGPL-3.0-or-later",
   "authors": [
@@ -28,9 +30,16 @@
   },
   "require": {
     "php": "^8.1",
-    "triangle/engine": "^8.1",
-    "triangle/events": "^1.0",
-    "localzet/cron": "^1.0"
+    "triangle/engine": "^9.0",
+    "localzet/cron": "^2.0"
+  },
+  "scripts": {
+    "lint": "find . -path './vendor' -prune -o -path './.git' -prune -o -name '*.php' -type f -print0 | xargs -0 -n1 php -l",
+    "test": "php tests/compatibility.php",
+    "check": [
+      "@lint",
+      "@test"
+    ]
   },
   "suggest": {
   },

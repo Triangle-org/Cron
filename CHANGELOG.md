@@ -24,18 +24,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-- Prepare the Engine 9 and Localzet Server 7 compatibility release.
-- Require `triangle/engine:^9.0` and `localzet/cron:^2.0`.
-
-### Removed
-- Remove the unused `triangle/events` dependency.
-
-### Migration
-- This release line requires Engine 9 and Localzet Server 7; Engine 8 and Server 4 applications must remain on `triangle/cron` 1.x.
-
 ### Planned
 - Task queuing
 - Distributed task execution
 - Task monitoring
+
+---
+
+## [2.0.0] - 2026-11-23
+
+### Breaking
+- Require Triangle Engine 9 and Localzet Server 7; Engine 8 and Server 4 applications must remain on `triangle/cron` 1.x.
+
+### Changed
+- Require `triangle/engine:^9.0` and `localzet/cron:^2.0`.
+- Register the scheduler as a dedicated Server 7 process through Engine 9's managed startup hook.
+- Load only cron tasks with both a callback and a rule.
+
+### Removed
+- Remove the unused `triangle/events` dependency.
 
